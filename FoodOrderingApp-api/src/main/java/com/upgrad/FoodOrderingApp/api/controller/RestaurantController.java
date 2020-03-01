@@ -96,7 +96,7 @@ public class RestaurantController {
         return new ResponseEntity<RestaurantDetailsResponse>(restaurantDetailsResponse, HttpStatus.OK);
     }
 
-    @RequestMapping(
+      @RequestMapping(
             method = RequestMethod.PUT,
             path = "/restaurant/{restaurant_id}",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,

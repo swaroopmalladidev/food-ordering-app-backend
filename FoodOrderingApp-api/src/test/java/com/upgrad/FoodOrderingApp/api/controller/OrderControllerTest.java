@@ -75,7 +75,7 @@ public class OrderControllerTest {
         when(mockRestaurantService.restaurantByUUID(saveOrderRequest.getRestaurantId().toString()))
                 .thenReturn(new RestaurantEntity());
         when(mockOrderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString()))
-                .thenReturn(new CouponEntity());
+                    .thenReturn(new CouponEntity());
 
         final OrderEntity orderEntity = new OrderEntity();
         final String orderId = UUID.randomUUID().toString();

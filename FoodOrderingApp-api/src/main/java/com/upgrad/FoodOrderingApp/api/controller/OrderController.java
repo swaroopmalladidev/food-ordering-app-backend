@@ -127,21 +127,21 @@ public class OrderController {
                 .emailAddress(custEntity.getEmail());
         List<OrderList> listOrder = new ArrayList<>();
         for(OrderEntity orderEntity: listOrderEntity){
-            List<OrderItemEntity> listOrderItemEntity = orderService.getOrderItems(orderEntity.getUuid());
-            List<ItemQuantityResponse> listItemQuantityResponse = new ArrayList<>();
-            for(OrderItemEntity oi :listOrderItemEntity) {
-                listItemQuantityResponse.add(new ItemQuantityResponse()
-                        .price(oi.getPrice())
-                        .quantity(oi.getQuantity())
-                        .item(new ItemQuantityResponseItem()
-                                .id(UUID.fromString(oi.getItem().getUuid()))
-                                .itemName(oi.getItem().getItemName())
-                                .itemPrice(oi.getItem().getPrice())
-                                .type(ItemQuantityResponseItem.TypeEnum.fromValue(oi.getItem().getType().toString()))));
+             List<OrderItemEntity> listOrderItemEntity = orderService.getOrderItems(orderEntity.getUuid());
+             List<ItemQuantityResponse> listItemQuantityResponse = new ArrayList<>();
+             for(OrderItemEntity oi :listOrderItemEntity) {
+                 listItemQuantityResponse.add(new ItemQuantityResponse()
+                                                    .price(oi.getPrice())
+                                                    .quantity(oi.getQuantity())
+                                                    .item(new ItemQuantityResponseItem()
+                                                            .id(UUID.fromString(oi.getItem().getUuid()))
+                                                            .itemName(oi.getItem().getItemName())
+                                                            .itemPrice(oi.getItem().getPrice())
+                                                            .type(ItemQuantityResponseItem.TypeEnum.fromValue(oi.getItem().getType().toString()))));
 
 
-            }
-            listOrder.add(new OrderList()
+             }
+             listOrder.add(new OrderList()
                     .id(UUID.fromString(orderEntity.getUuid()))
                     .date(orderEntity.getTimestamp().toString())
                     .bill(BigDecimal.valueOf(orderEntity.getBill()))
@@ -169,3 +169,4 @@ public class OrderController {
         return new ResponseEntity<>(custOrderResponse,HttpStatus.OK);
     }
 }
+

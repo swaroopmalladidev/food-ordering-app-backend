@@ -39,7 +39,7 @@ public class AddressDao {
         }
     }
 
-    public AddressEntity deleteAddress(AddressEntity addressEntity){
+     public AddressEntity deleteAddress(AddressEntity addressEntity){
         try {
             entityManager.remove(addressEntity);
         } catch (Exception e) {

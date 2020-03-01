@@ -56,12 +56,12 @@ public class CustomerController {
         CustomerAuthEntity custAuthEntity = customerService.authenticate(decodedUserNamePassword[0],decodedUserNamePassword[1]);
         //sending response with customer uuid and access token in HttpHeader
         LoginResponse loginResponse = new LoginResponse()
-                .id(custAuthEntity.getCustomer().getUuid())
-                .firstName(custAuthEntity.getCustomer().getFirstName())
-                .lastName(custAuthEntity.getCustomer().getLastName())
-                .contactNumber(custAuthEntity.getCustomer().getContactNumber())
-                .emailAddress(custAuthEntity.getCustomer().getEmail())
-                .message("SIGNED IN SUCCESSFULLY");
+                                            .id(custAuthEntity.getCustomer().getUuid())
+                                            .firstName(custAuthEntity.getCustomer().getFirstName())
+                                            .lastName(custAuthEntity.getCustomer().getLastName())
+                                            .contactNumber(custAuthEntity.getCustomer().getContactNumber())
+                                            .emailAddress(custAuthEntity.getCustomer().getEmail())
+                                            .message("LOGGED IN SUCCESSFULLY");
         HttpHeaders headers = new HttpHeaders();
         headers.add("access-token", custAuthEntity.getAccessToken());
         return new ResponseEntity<LoginResponse>(loginResponse, headers, HttpStatus.OK);
@@ -112,7 +112,7 @@ public class CustomerController {
             throws AuthorizationFailedException {
         CustomerAuthEntity custAuthEntity = customerService.logout(Utility.getTokenFromAuthorizationField(authorization));
         //creating response with logoutResponse customer uuid
-        LogoutResponse logoutResponse = new LogoutResponse().id(custAuthEntity.getCustomer().getUuid()).message("SIGNED OUT SUCCESSFULLY");
+        LogoutResponse logoutResponse = new LogoutResponse().id(custAuthEntity.getCustomer().getUuid()).message("LOGGED OUT SUCCESSFULLY");
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<LogoutResponse>(logoutResponse, headers, HttpStatus.OK);
     }

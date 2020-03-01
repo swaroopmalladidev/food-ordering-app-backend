@@ -148,7 +148,7 @@ public class CustomerService {
             }
             return custAuthEntity;
         } else {
-            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+            throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in.");
         }
     }
     @Transactional(propagation = Propagation.REQUIRED)
