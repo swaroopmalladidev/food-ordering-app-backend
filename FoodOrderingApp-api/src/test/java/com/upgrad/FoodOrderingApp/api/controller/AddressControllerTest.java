@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -65,7 +66,7 @@ public class AddressControllerTest {
                 .perform(post("/address?content=my_address")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                         .header("authorization", "Bearer database_accesstoken2")
-                        .content("{\"flat_building_name\":\"xyz\", \"locality\":\"abc\", \"city\":\"pqr\", \"pincode\":\"\", \"state_uuid\":\"testUUID\"}"))
+                        .content("{\"flat_building_name\":\"xyz\", \"locality\":\"abc\", \"city\":\"pqr\", \"pincode\":\"100000\", \"state_uuid\":\"testUUID\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("id").value("randomUuid001"))
                 .andExpect(jsonPath("status").value("ADDRESS SUCCESSFULLY REGISTERED"));
@@ -266,7 +267,7 @@ public class AddressControllerTest {
     //This test case passes when you have handled the exception of trying to delete an address with by providing an
     // address id that does not exist in the database.
     @Test
-    public void shouldNotDeleteAddressIfNoAddressPresentAgainstGivenAddressId() throws Exception {
+    public void     shouldNotDeleteAddressIfNoAddressPresentAgainstGivenAddressId() throws Exception {
         final CustomerEntity customerEntity = new CustomerEntity();
         when(mockCustomerService.getCustomer("database_accesstoken2")).thenReturn(customerEntity);
         when(mockAddressService.getAddressByUUID("82849cd5-106e-4b34-b9bf-94954c6ff527", customerEntity))

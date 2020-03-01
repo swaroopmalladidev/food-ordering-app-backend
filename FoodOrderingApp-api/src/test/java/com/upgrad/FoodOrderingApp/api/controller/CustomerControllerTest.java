@@ -46,7 +46,7 @@ public class CustomerControllerTest {
         final CustomerEntity createdCustomerEntity = new CustomerEntity();
         final String customerId = UUID.randomUUID().toString();
         createdCustomerEntity.setUuid(customerId);
-        when(mockCustomerService.saveCustomer(any())).thenReturn(createdCustomerEntity);
+        when(mockCustomerService.saveCust(any())).thenReturn(createdCustomerEntity);
 
         mockMvc
                 .perform(post("/customer/signup")
@@ -54,7 +54,7 @@ public class CustomerControllerTest {
                         .content("{\"first_name\":\"first\", \"last_name\":\"last\", \"email_address\":\"abc@email.com\", \"contact_number\":\"9090909090\", \"password\":\"qawsedrf@123\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("id").value(customerId));
-        verify(mockCustomerService, times(1)).saveCustomer(any());
+        verify(mockCustomerService, times(1)).saveCust(any());
     }
 
     //This test case passes when you have handled the exception of trying to signup but the request field is empty.
@@ -66,13 +66,13 @@ public class CustomerControllerTest {
                         .content("{\"first_name\":\"first\", \"last_name\":\"last\", \"email_address\":\"\", \"contact_number\":\"9090909090\", \"password\":\"qawsedrf@123\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("code").value("SGR-005"));
-        verify(mockCustomerService, times(0)).saveCustomer(any());
+        verify(mockCustomerService, times(0)).saveCust(any());
     }
 
     //This test case passes when you have handled the exception of trying to signup with invalid email-id.
     @Test
     public void shouldNotSignUpForInvalidEmailId() throws Exception {
-        when(mockCustomerService.saveCustomer(any()))
+        when(mockCustomerService.saveCust(any()))
                 .thenThrow(new SignUpRestrictedException("SGR-002", "Invalid email-id format!"));
 
         mockMvc
@@ -81,13 +81,13 @@ public class CustomerControllerTest {
                         .content("{\"first_name\":\"first\", \"last_name\":\"last\", \"email_address\":\"abc@1\", \"contact_number\":\"9090909090\", \"password\":\"qawsedrf@123\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("code").value("SGR-002"));
-        verify(mockCustomerService, times(1)).saveCustomer(any());
+        verify(mockCustomerService, times(1)).saveCust(any());
     }
 
     //This test case passes when you have handled the exception of trying to signup with invalid contact number.
     @Test
     public void shouldNotSignUpForInvalidContactNo() throws Exception {
-        when(mockCustomerService.saveCustomer(any()))
+        when(mockCustomerService.saveCust(any()))
                 .thenThrow(new SignUpRestrictedException("SGR-003", "Invalid contact number!"));
 
         mockMvc
@@ -96,13 +96,13 @@ public class CustomerControllerTest {
                         .content("{\"first_name\":\"first\", \"last_name\":\"last\", \"email_address\":\"abc@email.com\", \"contact_number\":\"123\", \"password\":\"qawsedrf@123\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("code").value("SGR-003"));
-        verify(mockCustomerService, times(1)).saveCustomer(any());
+        verify(mockCustomerService, times(1)).saveCust(any());
     }
 
     //This test case passes when you have handled the exception of trying to signup with invalid password.
     @Test
     public void shouldNotSignUpForInvalidPassword() throws Exception {
-        when(mockCustomerService.saveCustomer(any()))
+        when(mockCustomerService.saveCust(any()))
                 .thenThrow(new SignUpRestrictedException("SGR-004", "Weak password!"));
 
         mockMvc
@@ -111,14 +111,14 @@ public class CustomerControllerTest {
                         .content("{\"first_name\":\"first\", \"last_name\":\"last\", \"email_address\":\"abc@email.com\", \"contact_number\":\"9090909090\", \"password\":\"1\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("code").value("SGR-004"));
-        verify(mockCustomerService, times(1)).saveCustomer(any());
+        verify(mockCustomerService, times(1)).saveCust(any());
     }
 
     //This test case passes when you have handled the exception of trying to signup with a contact number which is
     // already registered.
     @Test
     public void shouldNotSignUpIfTheContactIsAlreadySignedUp() throws Exception {
-        when(mockCustomerService.saveCustomer(any()))
+        when(mockCustomerService.saveCust(any()))
                 .thenThrow(new SignUpRestrictedException("SGR-001", "Try any other contact number, this contact number has already been taken"));
 
         mockMvc
@@ -127,7 +127,7 @@ public class CustomerControllerTest {
                         .content("{\"first_name\":\"first\", \"last_name\":\"last\", \"email_address\":\"abc@email.com\", \"contact_number\":\"9090909090\", \"password\":\"qawsedrf@123\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("code").value("SGR-001"));
-        verify(mockCustomerService, times(1)).saveCustomer(any());
+        verify(mockCustomerService, times(1)).saveCust(any());
     }
 
     // ----------------------------- POST /customer/login --------------------------------
@@ -369,7 +369,7 @@ public class CustomerControllerTest {
         customerEntity.setUuid(customerId);
 
         when(mockCustomerService.getCustomer("auth")).thenReturn(customerEntity);
-        when(mockCustomerService.updateCustomerPassword("oldPwd", "newPwd", customerEntity))
+        when(mockCustomerService.updateCustPwd("oldPwd", "newPwd", customerEntity))
                 .thenReturn(customerEntity);
         mockMvc
                 .perform(put("/customer/password")
@@ -379,7 +379,7 @@ public class CustomerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(customerId));
         verify(mockCustomerService, times(1)).getCustomer("auth");
-        verify(mockCustomerService, times(1)).updateCustomerPassword("oldPwd", "newPwd", customerEntity);
+        verify(mockCustomerService, times(1)).updateCustPwd("oldPwd", "newPwd", customerEntity);
     }
 
     //This test case passes when you have handled the exception of trying to update your password but your old password
@@ -470,7 +470,7 @@ public class CustomerControllerTest {
     public void shouldNotUpdateCustomerPasswordIfNewPasswordDoesNotFollowRecommendedPasswordFormat() throws Exception {
         final CustomerEntity customerEntity = new CustomerEntity();
         when(mockCustomerService.getCustomer("auth")).thenReturn(customerEntity);
-        when(mockCustomerService.updateCustomerPassword("oldPwd", "newPwd", customerEntity))
+        when(mockCustomerService.updateCustPwd("oldPwd", "newPwd", customerEntity))
                 .thenThrow(new UpdateCustomerException("UCR-001", "Weak password!"));
         mockMvc
                 .perform(put("/customer/password")
@@ -480,7 +480,7 @@ public class CustomerControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("code").value("UCR-001"));
         verify(mockCustomerService, times(1)).getCustomer("auth");
-        verify(mockCustomerService, times(1)).updateCustomerPassword("oldPwd", "newPwd", customerEntity);
+        verify(mockCustomerService, times(1)).updateCustPwd("oldPwd", "newPwd", customerEntity);
     }
 
 }
