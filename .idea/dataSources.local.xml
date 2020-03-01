@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="PostgreSQL - restaurantdb@localhost" uuid="b80bfd78-c3c8-4337-bef4-a13c25b9cd8f">
+      <database-info product="PostgreSQL" version="11.5" jdbc-version="4.0" driver-name="PostgreSQL Native Driver" driver-version="PostgreSQL 9.4.1212">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>postgres</user-name>
+      <introspection-schemas>restaurantdb:public</introspection-schemas>
+    </data-source>
+  </component>
+</project>
