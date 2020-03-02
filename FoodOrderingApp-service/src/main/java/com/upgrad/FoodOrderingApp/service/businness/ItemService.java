@@ -24,6 +24,6 @@ public class ItemService {
     }
 
     public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantId, String categoryId) {
-        return itemDao.getItemsByCategoryAndRestaurant(restaurantId,categoryId);
+        return itemDao.getItemsByCategoryAndRestaurant(restaurantId, categoryId);
     }
 }

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin(allowedHeaders="*", origins="*", exposedHeaders=("access-token"))
+@CrossOrigin(allowedHeaders = "*", origins = "*", exposedHeaders = ("access-token"))
 @RestController
 @RequestMapping("/")
 public class ItemController {
@@ -31,6 +31,7 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
+    //This endpoint is used to Get Items from the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.GET,
             path = "/item/restaurant/{restaurant_id}",
@@ -42,7 +43,7 @@ public class ItemController {
         RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(restaurantId);
         List<ItemEntity> listEntity = itemService.getItemsByPopularity(restaurantEntity);
         ArrayList<ItemList> listItemList = new ArrayList<>();
-        for(ItemEntity i: listEntity){
+        for (ItemEntity i : listEntity) {
             listItemList.add(new ItemList().id(UUID.fromString(i.getUuid()))
                     .price(i.getPrice()).itemName(i.getItemName())
                     .itemType(ItemTypeEnum.fromValue(i.getType().toString())));

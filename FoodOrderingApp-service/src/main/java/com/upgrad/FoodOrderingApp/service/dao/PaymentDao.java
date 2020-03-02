@@ -15,7 +15,7 @@ public class PaymentDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public PaymentEntity getPaymentByUUID(String uuid){
+    public PaymentEntity getPaymentByUUID(String uuid) {
         try {
             return entityManager.createNamedQuery("getPaymentByUUID", PaymentEntity.class).setParameter("uuid", uuid).getSingleResult();
         } catch (NoResultException nre) {
@@ -27,7 +27,7 @@ public class PaymentDao {
         }
     }
 
-    public List<PaymentEntity> getAllPayment(){
+    public List<PaymentEntity> getAllPayment() {
         try {
             return entityManager.createNamedQuery("getAllPayment", PaymentEntity.class).getResultList();
         } catch (NoResultException nre) {
@@ -38,7 +38,6 @@ public class PaymentDao {
             return null;
         }
     }
-
 
 
 }

@@ -20,8 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin(allowedHeaders="*", origins="*", exposedHeaders=("access-token"))
+@CrossOrigin(allowedHeaders = "*", origins = "*", exposedHeaders = ("access-token"))
 @RestController
+//This endpoint is used to get address from the FoodOrderingAppBackend.
 @RequestMapping("/")
 public class AddressController {
 
@@ -41,9 +42,9 @@ public class AddressController {
         CustomerEntity customerEntity = customerService.getCustomer(Utility.getTokenFromAuthorizationField(authorization));
         List<AddressEntity> listAddEntity = addressService.getAllAddress(customerEntity);
         List<AddressList> listAddress = null;
-        if(listAddEntity.size() != 0 ) {
+        if (listAddEntity.size() != 0) {
             listAddress = new ArrayList<AddressList>();
-            for (AddressEntity addEntity: listAddEntity) {
+            for (AddressEntity addEntity : listAddEntity) {
                 AddressListState addListState = new AddressListState()
                         .id(UUID.fromString(addEntity.getState().getUuid()))
                         .stateName(addEntity.getState().getStateName());
@@ -60,6 +61,7 @@ public class AddressController {
         return new ResponseEntity<AddressListResponse>(addListResponse, HttpStatus.OK);
     }
 
+    //This endpoint is used to save address in the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.POST,
             path = "/address",
@@ -80,11 +82,12 @@ public class AddressController {
         addEntity.setPincode(saveAddRequest.getPincode());
         addEntity.setState(stateEntity);
         //Calling AddressService to create a new AddressEntity
-        AddressEntity createdAddressEntity =  addressService.saveAddress(addEntity, custEntity);
+        AddressEntity createdAddressEntity = addressService.saveAddress(addEntity, custEntity);
         SaveAddressResponse saveAddResponse = new SaveAddressResponse().id(createdAddressEntity.getUuid()).status("ADDRESS SUCCESSFULLY REGISTERED");
         return new ResponseEntity<SaveAddressResponse>(saveAddResponse, HttpStatus.CREATED);
     }
 
+    //This endpoint is used to get all the states from the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.GET,
             path = "/states",
@@ -93,9 +96,9 @@ public class AddressController {
         List<StateEntity> listStateEntity = addressService.getAllStates();
         List<StatesList> listStates = null;
 
-        if( listStateEntity.size() != 0 ) {
+        if (listStateEntity.size() != 0) {
             listStates = new ArrayList<StatesList>();
-            for (StateEntity stateEntity: listStateEntity) {
+            for (StateEntity stateEntity : listStateEntity) {
                 listStates.add(new StatesList().id(UUID.fromString(stateEntity.getUuid())).stateName(stateEntity.getStateName()));
             }
         }
@@ -104,6 +107,7 @@ public class AddressController {
         return new ResponseEntity<StatesListResponse>(listStatesResponse, HttpStatus.OK);
     }
 
+    //This endpoint is used to delete address based on address id from the FoodOrderingAppBackend.
     @DeleteMapping("/address/{address_id}")
     public ResponseEntity<DeleteAddressResponse> deleteAddress(
             @RequestHeader("authorization") final String authorization,
@@ -113,10 +117,10 @@ public class AddressController {
         CustomerEntity custEntity = customerService.getCustomer(Utility.getTokenFromAuthorizationField(authorization));
 
         //Calling AddressService to search AddressEntity
-        AddressEntity addEntity =  addressService.getAddressByUUID(addressId, custEntity);
+        AddressEntity addEntity = addressService.getAddressByUUID(addressId, custEntity);
         AddressEntity delAddressEntity = addressService.deleteAddress(addEntity);
         DeleteAddressResponse delAddressResponse = new DeleteAddressResponse().id(UUID.fromString(delAddressEntity.getUuid())).status("ADDRESS DELETED SUCCESSFULLY");
-        return  new ResponseEntity<>(delAddressResponse, HttpStatus.OK);
+        return new ResponseEntity<>(delAddressResponse, HttpStatus.OK);
     }
 }
 

@@ -34,7 +34,7 @@ public class OrderEntity implements Serializable {
 
     @Column(name = "discount")
     @NotNull
-    private Double discount=0.0;
+    private Double discount = 0.0;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "coupon_id")
@@ -66,7 +66,8 @@ public class OrderEntity implements Serializable {
     @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<OrderItemEntity> orderItem = new ArrayList<>();
 
-    public OrderEntity(){}
+    public OrderEntity() {
+    }
 
     public OrderEntity(@Size(max = 200) String uuid, @NotNull Double bill, CouponEntity coupon, Double discount, @NotNull Date timestamp, PaymentEntity payment, @NotNull CustomerEntity customer, @NotNull AddressEntity address, @NotNull RestaurantEntity restaurant) {
         this.id = 0;

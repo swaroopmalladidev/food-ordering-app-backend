@@ -32,11 +32,11 @@ public class AddressService {
         return addressDao.deleteAddress(addEntity);
     }
 
-    public AddressEntity getAddressByUUID(String uuid, CustomerEntity custEntity) throws AuthorizationFailedException, AddressNotFoundException{
+    public AddressEntity getAddressByUUID(String uuid, CustomerEntity custEntity) throws AuthorizationFailedException, AddressNotFoundException {
         CustomerAddressEntity customerAddEntity = addressDao.getAddressByUUID(uuid, custEntity.getUuid());
-        if(customerAddEntity == null ) {
-            throw new AddressNotFoundException("ANF-003","No address by this id");
-        } else if ( customerAddEntity.getCustomer() != custEntity ) {
+        if (customerAddEntity == null) {
+            throw new AddressNotFoundException("ANF-003", "No address by this id");
+        } else if (customerAddEntity.getCustomer() != custEntity) {
             throw new AuthorizationFailedException("ATHR-004", "You are not authorized to view/update/delete any one else's address");
         } else {
             return customerAddEntity.getAddress();
@@ -46,16 +46,16 @@ public class AddressService {
     @Transactional(propagation = Propagation.REQUIRED)
     public AddressEntity saveAddress(AddressEntity addEntity, CustomerEntity custEntity) throws SaveAddressException {
 
-        if ( addEntity.getPincode() == null || !(addEntity.getPincode().matches("^\\d{6,6}$"))) {
+        if (addEntity.getPincode() == null || !(addEntity.getPincode().matches("^\\d{6,6}$"))) {
             throw new SaveAddressException("SAR-002", "Invalid pincode.");
         }
 
-        if ( addEntity.getFlatBuilNo() == null ||
+        if (addEntity.getFlatBuilNo() == null ||
                 addEntity.getFlatBuilNo().isEmpty() ||
                 addEntity.getLocality() == null ||
                 addEntity.getLocality().isEmpty() ||
                 addEntity.getCity() == null ||
-                addEntity.getCity().isEmpty() ) {
+                addEntity.getCity().isEmpty()) {
             throw new SaveAddressException("SAR-001", "No field can be empty.");
         }
 
@@ -71,12 +71,11 @@ public class AddressService {
     }
 
 
-
     public List<AddressEntity> getAllAddress(CustomerEntity custEntity) {
 
         List<CustomerAddressEntity> listCustAddEntity = addressDao.getAllCustomerAddress(custEntity);
         List<AddressEntity> listAddEntity = new ArrayList<>();
-        for (CustomerAddressEntity ca: listCustAddEntity) {
+        for (CustomerAddressEntity ca : listCustAddEntity) {
             listAddEntity.add(ca.getAddress());
         }
 

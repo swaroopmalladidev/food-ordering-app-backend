@@ -22,7 +22,7 @@ public class CategoryService {
     public List<CategoryEntity> getCategoriesByRestaurant(String restaurantId) {
         List<RestaurantCategoryEntity> listRestaurantCategoryEntity = categoryDao.getCategoriesByRestaurant(restaurantId);
         List<CategoryEntity> listCategoryEntity = new ArrayList<>();
-        for(RestaurantCategoryEntity rc: listRestaurantCategoryEntity ) {
+        for (RestaurantCategoryEntity rc : listRestaurantCategoryEntity) {
             listCategoryEntity.add(rc.getCategory());
         }
         return listCategoryEntity;
@@ -30,19 +30,19 @@ public class CategoryService {
 
     public CategoryEntity getCategoryById(String categoryId) throws CategoryNotFoundException {
 
-        if(categoryId == null || categoryId.isEmpty()) {
-            throw new CategoryNotFoundException("CNF-001","Category id field should not be empty");
+        if (categoryId == null || categoryId.isEmpty()) {
+            throw new CategoryNotFoundException("CNF-001", "Category id field should not be empty");
         }
 
         CategoryEntity categoryEntity = categoryDao.getCategoryById(categoryId);
-        if(categoryEntity == null) {
-            throw new CategoryNotFoundException("CNF-002","No category by this id");
+        if (categoryEntity == null) {
+            throw new CategoryNotFoundException("CNF-002", "No category by this id");
         }
 
         List<CategoryItemEntity> listCategoryItemEntity = categoryDao.getCategoryItemEntityByCategoryUuid(categoryId);
 
         List<ItemEntity> listItemEntity = new ArrayList<>();
-        for(CategoryItemEntity ci :listCategoryItemEntity) {
+        for (CategoryItemEntity ci : listCategoryItemEntity) {
             listItemEntity.add(ci.getItem());
         }
         categoryEntity.setItems(listItemEntity);

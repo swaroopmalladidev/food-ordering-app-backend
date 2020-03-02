@@ -151,10 +151,12 @@ public class CustomerService {
             throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in.");
         }
     }
+
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerEntity updateCustomer(CustomerEntity custEntity) throws AuthorizationFailedException {
         return customerDao.updateCustomer(custEntity);
     }
+
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerEntity updateCustPwd(String oldPassword, String newPassword, CustomerEntity custEntity) throws UpdateCustomerException {
         if (!isPasswordStrong(newPassword)) {

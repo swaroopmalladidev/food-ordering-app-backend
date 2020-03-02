@@ -21,7 +21,7 @@ public class ItemDao {
 
     public List<ItemEntity> getItemsByCategoryAndRestaurant(String RestaurantUuid, String CategoryUuid) {
         try {
-            return entityManager.createNamedQuery("getItemsByCategoryAndRestaurant", ItemEntity.class).setParameter("categoryId",CategoryUuid).setParameter("restaurantId", RestaurantUuid).getResultList();
+            return entityManager.createNamedQuery("getItemsByCategoryAndRestaurant", ItemEntity.class).setParameter("categoryId", CategoryUuid).setParameter("restaurantId", RestaurantUuid).getResultList();
         } catch (NoResultException nre) {
             return null;
         } catch (Exception e) {
@@ -34,7 +34,7 @@ public class ItemDao {
 
     public ItemEntity getItemsByUuid(String uuid) {
         try {
-            return entityManager.createNamedQuery("getItemsByUuid", ItemEntity.class).setParameter("uuid",uuid).getSingleResult();
+            return entityManager.createNamedQuery("getItemsByUuid", ItemEntity.class).setParameter("uuid", uuid).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         } catch (Exception e) {
@@ -46,10 +46,10 @@ public class ItemDao {
 
     public List<ItemEntity> getItemsByPopularity(Long restaurantId) {
         try {
-            List<ItemEntity> listItemEntity = entityManager.createNamedQuery("getItemsByPopularity", ItemEntity.class).setParameter("restaurantId",restaurantId).getResultList();
-            List<ItemEntity>  subListItemEntity = new ArrayList<>();
+            List<ItemEntity> listItemEntity = entityManager.createNamedQuery("getItemsByPopularity", ItemEntity.class).setParameter("restaurantId", restaurantId).getResultList();
+            List<ItemEntity> subListItemEntity = new ArrayList<>();
             int listSize = listItemEntity.size();
-            if(listSize > 0) {
+            if (listSize > 0) {
                 subListItemEntity.addAll(listItemEntity.subList(0, Math.min(listSize, 5)));
             }
             return subListItemEntity;

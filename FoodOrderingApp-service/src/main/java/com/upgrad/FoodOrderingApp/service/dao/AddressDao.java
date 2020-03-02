@@ -15,9 +15,10 @@ public class AddressDao {
 
     @PersistenceContext
     private EntityManager entityManager;
-    public List<CustomerAddressEntity> getAllCustomerAddress(CustomerEntity customer){
+
+    public List<CustomerAddressEntity> getAllCustomerAddress(CustomerEntity customer) {
         try {
-            return entityManager.createNamedQuery("getAllCustomerAddress", CustomerAddressEntity.class).setParameter("customer",customer).getResultList();
+            return entityManager.createNamedQuery("getAllCustomerAddress", CustomerAddressEntity.class).setParameter("customer", customer).getResultList();
         } catch (NoResultException nre) {
             return null;
         } catch (Exception e) {
@@ -27,9 +28,9 @@ public class AddressDao {
         }
     }
 
-    public CustomerAddressEntity getAddressByUUID(String addressUuid, String customerUuid){
+    public CustomerAddressEntity getAddressByUUID(String addressUuid, String customerUuid) {
         try {
-            return entityManager.createNamedQuery("getCustomerAddressByUUID", CustomerAddressEntity.class).setParameter("addressUuid",addressUuid).getSingleResult();
+            return entityManager.createNamedQuery("getCustomerAddressByUUID", CustomerAddressEntity.class).setParameter("addressUuid", addressUuid).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         } catch (Exception e) {
@@ -39,7 +40,7 @@ public class AddressDao {
         }
     }
 
-     public AddressEntity deleteAddress(AddressEntity addressEntity){
+    public AddressEntity deleteAddress(AddressEntity addressEntity) {
         try {
             entityManager.remove(addressEntity);
         } catch (Exception e) {
@@ -49,7 +50,7 @@ public class AddressDao {
         return addressEntity;
     }
 
-    public AddressEntity saveAddress(CustomerAddressEntity customerAddressEntity){
+    public AddressEntity saveAddress(CustomerAddressEntity customerAddressEntity) {
         try {
             entityManager.persist(customerAddressEntity.getAddress());
             entityManager.persist(customerAddressEntity);

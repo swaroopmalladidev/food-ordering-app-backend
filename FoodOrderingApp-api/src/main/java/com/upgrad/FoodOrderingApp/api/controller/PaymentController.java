@@ -17,14 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin(allowedHeaders="*", origins="*", exposedHeaders=("access-token"))
+@CrossOrigin(allowedHeaders = "*", origins = "*", exposedHeaders = ("access-token"))
 @RestController
+//This endpoint is used to get Payment information from the FoodOrderingAppBackend.
 @RequestMapping("/")
 public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
 
+    //This endpoint is used to Get Payment Modes from the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.GET,
             path = "/payment",
@@ -32,10 +34,10 @@ public class PaymentController {
     public ResponseEntity<PaymentListResponse> getPaymentList() {
         List<PaymentEntity> listPaymentEntity = paymentService.getAllPaymentMethods();
         List<PaymentResponse> listPaymentResponse = new ArrayList<PaymentResponse>();
-        for (PaymentEntity paymentEntity: listPaymentEntity) {
+        for (PaymentEntity paymentEntity : listPaymentEntity) {
             listPaymentResponse.add(new PaymentResponse().id(UUID.fromString(paymentEntity.getUuid())).paymentName(paymentEntity.getPaymentName()));
         }
-        if(listPaymentResponse.size() == 0 ) {
+        if (listPaymentResponse.size() == 0) {
             listPaymentResponse = null;
         }
         PaymentListResponse paymentListResponse = new PaymentListResponse().paymentMethods(listPaymentResponse);

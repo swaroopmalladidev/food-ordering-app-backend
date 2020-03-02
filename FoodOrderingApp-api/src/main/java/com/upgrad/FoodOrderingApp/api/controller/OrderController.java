@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-@CrossOrigin(allowedHeaders="*", origins="*", exposedHeaders=("access-token"))
+@CrossOrigin(allowedHeaders = "*", origins = "*", exposedHeaders = ("access-token"))
 @RestController
 @RequestMapping("/")
 public class OrderController {
@@ -39,6 +39,7 @@ public class OrderController {
     @Autowired
     private ItemService itemService;
 
+    //This endpoint is used to get the Customer order coupon from the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.GET,
             path = "/order/coupon/{coupon_name}",
@@ -51,8 +52,8 @@ public class OrderController {
         // Calling authenticationService with access token came in authorization field.
         CustomerEntity customerEntity = customerService.getCustomer(Utility.getTokenFromAuthorizationField(authorization));
 
-        if(couponName == null || couponName.isEmpty()) {
-            throw new CouponNotFoundException("CPF-002","Coupon name field should not be empty");
+        if (couponName == null || couponName.isEmpty()) {
+            throw new CouponNotFoundException("CPF-002", "Coupon name field should not be empty");
 
         }
         CouponEntity couponEntity = orderService.getCouponByCouponName(couponName);
@@ -65,6 +66,7 @@ public class OrderController {
         return new ResponseEntity<>(couponResponse, HttpStatus.OK);
     }
 
+    //This endpoint is used to save order to the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.POST,
             path = "/order",
@@ -96,7 +98,7 @@ public class OrderController {
         orderEntity.setTimestamp(new Date());
         orderEntity.setOrderItem(null);
         OrderEntity saveOrderEntity = orderService.saveOrder(orderEntity);
-        for(ItemQuantity itemQuantity: listItemQuantity ) {
+        for (ItemQuantity itemQuantity : listItemQuantity) {
             OrderItemEntity orderItemEntity = new OrderItemEntity();
             orderItemEntity.setItem(itemService.getItemsByUuid(itemQuantity.getItemId().toString()));
             orderItemEntity.setPrice(itemQuantity.getPrice());
@@ -109,6 +111,7 @@ public class OrderController {
         return new ResponseEntity<>(saveOrderResponse, HttpStatus.CREATED);
     }
 
+    //This endpoint is used to get order from the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.GET,
             path = "/order",
@@ -126,22 +129,22 @@ public class OrderController {
                 .contactNumber(custEntity.getContactNumber())
                 .emailAddress(custEntity.getEmail());
         List<OrderList> listOrder = new ArrayList<>();
-        for(OrderEntity orderEntity: listOrderEntity){
-             List<OrderItemEntity> listOrderItemEntity = orderService.getOrderItems(orderEntity.getUuid());
-             List<ItemQuantityResponse> listItemQuantityResponse = new ArrayList<>();
-             for(OrderItemEntity oi :listOrderItemEntity) {
-                 listItemQuantityResponse.add(new ItemQuantityResponse()
-                                                    .price(oi.getPrice())
-                                                    .quantity(oi.getQuantity())
-                                                    .item(new ItemQuantityResponseItem()
-                                                            .id(UUID.fromString(oi.getItem().getUuid()))
-                                                            .itemName(oi.getItem().getItemName())
-                                                            .itemPrice(oi.getItem().getPrice())
-                                                            .type(ItemQuantityResponseItem.TypeEnum.fromValue(oi.getItem().getType().toString()))));
+        for (OrderEntity orderEntity : listOrderEntity) {
+            List<OrderItemEntity> listOrderItemEntity = orderService.getOrderItems(orderEntity.getUuid());
+            List<ItemQuantityResponse> listItemQuantityResponse = new ArrayList<>();
+            for (OrderItemEntity oi : listOrderItemEntity) {
+                listItemQuantityResponse.add(new ItemQuantityResponse()
+                        .price(oi.getPrice())
+                        .quantity(oi.getQuantity())
+                        .item(new ItemQuantityResponseItem()
+                                .id(UUID.fromString(oi.getItem().getUuid()))
+                                .itemName(oi.getItem().getItemName())
+                                .itemPrice(oi.getItem().getPrice())
+                                .type(ItemQuantityResponseItem.TypeEnum.fromValue(oi.getItem().getType().toString()))));
 
 
-             }
-             listOrder.add(new OrderList()
+            }
+            listOrder.add(new OrderList()
                     .id(UUID.fromString(orderEntity.getUuid()))
                     .date(orderEntity.getTimestamp().toString())
                     .bill(BigDecimal.valueOf(orderEntity.getBill()))
@@ -166,7 +169,7 @@ public class OrderController {
                     .itemQuantities(listItemQuantityResponse));
         }
         CustomerOrderResponse custOrderResponse = new CustomerOrderResponse().orders(listOrder);
-        return new ResponseEntity<>(custOrderResponse,HttpStatus.OK);
+        return new ResponseEntity<>(custOrderResponse, HttpStatus.OK);
     }
 }
 

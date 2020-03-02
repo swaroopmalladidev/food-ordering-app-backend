@@ -13,7 +13,7 @@ public class CustomerDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public CustomerEntity createCustomer(CustomerEntity customerEntity){
+    public CustomerEntity createCustomer(CustomerEntity customerEntity) {
         try {
             entityManager.persist(customerEntity);
         } catch (Exception e) {
@@ -33,7 +33,7 @@ public class CustomerDao {
         return updateCustomerEntity;
     }
 
-    public CustomerEntity getUserByContactNumber(String contactNumber){
+    public CustomerEntity getUserByContactNumber(String contactNumber) {
         try {
             return entityManager.createNamedQuery("customerByContactNumber", CustomerEntity.class).setParameter("contactNumber", contactNumber).getSingleResult();
         } catch (NoResultException nre) {

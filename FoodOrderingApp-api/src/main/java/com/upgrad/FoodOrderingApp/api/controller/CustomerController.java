@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-@CrossOrigin(allowedHeaders="*", origins="*", exposedHeaders=("access-token"))
+@CrossOrigin(allowedHeaders = "*", origins = "*", exposedHeaders = ("access-token"))
 @RestController
 @RequestMapping("/")
 public class CustomerController {
@@ -31,6 +31,7 @@ public class CustomerController {
     @Autowired
     private PasswordCryptographyProvider passwordCryptographyProvider;
 
+    //This endpoint is used to login to the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.POST,
             path = "/customer/login",
@@ -42,31 +43,32 @@ public class CustomerController {
         //spliting and extracting authorization base 64 code string from "authorization" field
         String[] base64EncodedString = authorization.split("Basic ");
         //decode base64 string from a "authorization" field
-        if(base64EncodedString.length != 2 ) {
-            throw new AuthenticationFailedException("ATH-003","Incorrect format of decoded customer name and password");
+        if (base64EncodedString.length != 2) {
+            throw new AuthenticationFailedException("ATH-003", "Incorrect format of decoded customer name and password");
         }
         byte[] decodedArray = passwordCryptographyProvider.getBase64DecodedStringAsBytes(base64EncodedString[1]);
         String decodedString = new String(decodedArray);
         //decoded string contain username and password separated by ":"
         String[] decodedUserNamePassword = decodedString.split(":");
-        if ( decodedUserNamePassword.length != 2 ) {
-            throw new AuthenticationFailedException("ATH-003","Incorrect format of decoded customer name and password");
+        if (decodedUserNamePassword.length != 2) {
+            throw new AuthenticationFailedException("ATH-003", "Incorrect format of decoded customer name and password");
         }
         //getting CustomerEntity from Auth Token
-        CustomerAuthEntity custAuthEntity = customerService.authenticate(decodedUserNamePassword[0],decodedUserNamePassword[1]);
+        CustomerAuthEntity custAuthEntity = customerService.authenticate(decodedUserNamePassword[0], decodedUserNamePassword[1]);
         //sending response with customer uuid and access token in HttpHeader
         LoginResponse loginResponse = new LoginResponse()
-                                            .id(custAuthEntity.getCustomer().getUuid())
-                                            .firstName(custAuthEntity.getCustomer().getFirstName())
-                                            .lastName(custAuthEntity.getCustomer().getLastName())
-                                            .contactNumber(custAuthEntity.getCustomer().getContactNumber())
-                                            .emailAddress(custAuthEntity.getCustomer().getEmail())
-                                            .message("LOGGED IN SUCCESSFULLY");
+                .id(custAuthEntity.getCustomer().getUuid())
+                .firstName(custAuthEntity.getCustomer().getFirstName())
+                .lastName(custAuthEntity.getCustomer().getLastName())
+                .contactNumber(custAuthEntity.getCustomer().getContactNumber())
+                .emailAddress(custAuthEntity.getCustomer().getEmail())
+                .message("LOGGED IN SUCCESSFULLY");
         HttpHeaders headers = new HttpHeaders();
         headers.add("access-token", custAuthEntity.getAccessToken());
         return new ResponseEntity<LoginResponse>(loginResponse, headers, HttpStatus.OK);
     }
 
+    //This endpoint is used to SignUp to the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.POST,
             path = "/customer/signup",
@@ -102,6 +104,7 @@ public class CustomerController {
         return new ResponseEntity<SignupCustomerResponse>(signupCustResponse, HttpStatus.CREATED);
     }
 
+    //This endpoint is used to Logout from the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.POST,
             path = "/customer/logout",
@@ -117,6 +120,7 @@ public class CustomerController {
         return new ResponseEntity<LogoutResponse>(logoutResponse, headers, HttpStatus.OK);
     }
 
+    //This endpoint is used to Update password for the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.PUT,
             path = "/customer/password",
@@ -126,7 +130,7 @@ public class CustomerController {
             @RequestHeader("authorization") final String authorization,
             @RequestBody final UpdatePasswordRequest updatePwdRequest)
             throws UpdateCustomerException, AuthorizationFailedException {
-        if(updatePwdRequest.getOldPassword() == null ||
+        if (updatePwdRequest.getOldPassword() == null ||
                 updatePwdRequest.getOldPassword().isEmpty() ||
                 updatePwdRequest.getNewPassword() == null ||
                 updatePwdRequest.getNewPassword().isEmpty()) {
@@ -134,12 +138,13 @@ public class CustomerController {
         }
         // Calling authentication Service with access token.
         CustomerEntity customerEntity = customerService.getCustomer(Utility.getTokenFromAuthorizationField(authorization));
-        customerService.updateCustPwd(updatePwdRequest.getOldPassword(),updatePwdRequest.getNewPassword(), customerEntity);
+        customerService.updateCustPwd(updatePwdRequest.getOldPassword(), updatePwdRequest.getNewPassword(), customerEntity);
         //creating response with customer uuid
         UpdatePasswordResponse updatePwdResponse = new UpdatePasswordResponse().id(customerEntity.getUuid()).status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
         return new ResponseEntity<UpdatePasswordResponse>(updatePwdResponse, HttpStatus.OK);
     }
 
+    //This endpoint is used to Update Customer Details for the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.PUT,
             path = "/customer",
@@ -149,14 +154,14 @@ public class CustomerController {
             @RequestHeader("authorization") final String authorization,
             @RequestBody final UpdateCustomerRequest updateCustRequest)
             throws UpdateCustomerException, AuthorizationFailedException {
-        if( updateCustRequest.getFirstName() == null ||
-                updateCustRequest.getFirstName().isEmpty()){
+        if (updateCustRequest.getFirstName() == null ||
+                updateCustRequest.getFirstName().isEmpty()) {
             throw new UpdateCustomerException("UCR-002", "First name field should not be empty");
         }
         // Calling authenticationService with access token came in authorization field.
         CustomerEntity customerEntity = customerService.getCustomer(Utility.getTokenFromAuthorizationField(authorization));
         customerEntity.setFirstName(updateCustRequest.getFirstName());
-        if( updateCustRequest.getLastName() != null &&
+        if (updateCustRequest.getLastName() != null &&
                 !updateCustRequest.getLastName().isEmpty()) {
             customerEntity.setLastName(updateCustRequest.getLastName());
         }

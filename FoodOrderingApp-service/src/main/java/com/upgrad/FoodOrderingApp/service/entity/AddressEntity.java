@@ -54,7 +54,8 @@ public class AddressEntity implements Serializable {
     @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
     private List<OrderEntity> order = new ArrayList<>();
 
-    public AddressEntity(){}
+    public AddressEntity() {
+    }
 
     public AddressEntity(@Size(max = 200) String uuid, @Size(max = 255) String flatBuildNo, @Size(max = 255) String locality, @Size(max = 39) String city, @Size(max = 30) String pincode, StateEntity state) {
         this.id = 0;

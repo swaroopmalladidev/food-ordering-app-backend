@@ -267,7 +267,7 @@ public class AddressControllerTest {
     //This test case passes when you have handled the exception of trying to delete an address with by providing an
     // address id that does not exist in the database.
     @Test
-    public void     shouldNotDeleteAddressIfNoAddressPresentAgainstGivenAddressId() throws Exception {
+    public void shouldNotDeleteAddressIfNoAddressPresentAgainstGivenAddressId() throws Exception {
         final CustomerEntity customerEntity = new CustomerEntity();
         when(mockCustomerService.getCustomer("database_accesstoken2")).thenReturn(customerEntity);
         when(mockAddressService.getAddressByUUID("82849cd5-106e-4b34-b9bf-94954c6ff527", customerEntity))

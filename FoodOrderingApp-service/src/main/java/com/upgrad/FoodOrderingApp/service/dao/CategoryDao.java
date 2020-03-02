@@ -39,7 +39,7 @@ public class CategoryDao {
         }
     }
 
-    public List<CategoryEntity> getAllCategoriesOrderedByName(){
+    public List<CategoryEntity> getAllCategoriesOrderedByName() {
         try {
             return entityManager.createNamedQuery("getAllCategoriesOrderedByName", CategoryEntity.class).getResultList();
         } catch (NoResultException nre) {
@@ -62,7 +62,6 @@ public class CategoryDao {
             return null;
         }
     }
-
 
 
 }

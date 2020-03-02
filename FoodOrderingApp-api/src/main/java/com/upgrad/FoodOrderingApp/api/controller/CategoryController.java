@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin(allowedHeaders="*", origins="*", exposedHeaders=("access-token"))
+@CrossOrigin(allowedHeaders = "*", origins = "*", exposedHeaders = ("access-token"))
 @RestController
 @RequestMapping("/")
 public class CategoryController {
@@ -28,6 +28,7 @@ public class CategoryController {
     @Autowired
     private ItemService itemService;
 
+    //This endpoint is used to get categories names from the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.GET,
             path = "/category",
@@ -35,7 +36,7 @@ public class CategoryController {
     public ResponseEntity<CategoriesListResponse> getAllCategoriesOrderedByName() {
         List<CategoryEntity> listCategoryEntity = categoryService.getAllCategoriesOrderedByName();
         List<CategoryListResponse> listCategoryResponse = null;
-        if(listCategoryEntity.size() != 0) {
+        if (listCategoryEntity.size() != 0) {
             listCategoryResponse = new ArrayList<>();
             for (CategoryEntity c : listCategoryEntity) {
                 listCategoryResponse.add(new CategoryListResponse()
@@ -47,6 +48,7 @@ public class CategoryController {
         return new ResponseEntity<>(listCategoriesResponse, HttpStatus.OK);
     }
 
+    //This endpoint is used to get categories details from the FoodOrderingAppBackend.
     @RequestMapping(
             method = RequestMethod.GET,
             path = "/category/{category_id}",
@@ -54,12 +56,12 @@ public class CategoryController {
     public ResponseEntity<CategoryDetailsResponse> getCategoryDetails(
             @PathVariable("category_id") final String categoryId)
             throws CategoryNotFoundException {
-        if( categoryId == null || categoryId.isEmpty()) {
-            throw new CategoryNotFoundException("CNF-001","Category id field should not be empty");
+        if (categoryId == null || categoryId.isEmpty()) {
+            throw new CategoryNotFoundException("CNF-001", "Category id field should not be empty");
         }
         CategoryEntity categoryEntity = categoryService.getCategoryById(categoryId);
         List<ItemList> listItem = new ArrayList<ItemList>();
-        for(ItemEntity i : categoryEntity.getItems()){
+        for (ItemEntity i : categoryEntity.getItems()) {
             listItem.add(new ItemList()
                     .id(UUID.fromString(i.getUuid()))
                     .itemType(ItemList.ItemTypeEnum.fromValue(i.getType().toString()))
@@ -71,6 +73,6 @@ public class CategoryController {
                 .categoryName(categoryEntity.getCategoryName())
                 .itemList(listItem);
 
-        return new ResponseEntity<CategoryDetailsResponse>(categoryResponse,HttpStatus.OK);
+        return new ResponseEntity<CategoryDetailsResponse>(categoryResponse, HttpStatus.OK);
     }
 }
